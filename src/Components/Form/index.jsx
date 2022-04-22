@@ -5,45 +5,70 @@ import { useDispatch,useSelector} from "react-redux";
 import shortid from "shortid";
 
 function Form() {
-  let { id } = useParams();
+    let { id } = useParams();
   
-  let history = useHistory();
-  const dispatch = useDispatch()
+    let history = useHistory();
+    const dispatch = useDispatch()
     const [Name, setName] = useState("");
     const [MobileNumber, setMobileNumber] = useState("");
     const [DebitCardNumber, setDebitCardNumber] = useState(0);
     const [Gender, setGender] = useState("");
     const [gid, setid] = useState("");
+    const [validate, setvalidate] = useState("Fields can't be empty");
     const dataselector = useSelector((state) => state.contacts.contacts)
     const getdataselector = useSelector((state) => state.contacts.contact)
     
     const submitHandler = (e) => {
       e.preventDefault()
-      const formdata = {
-        id: shortid.generate(),
-        Name:Name,
-        MobileNumber:MobileNumber,
-        DebitCardNumber:DebitCardNumber,
-        Gender:Gender
+      if(Name.length<=0||MobileNumber.length<=0||DebitCardNumber==0||Gender.length<=0)
+      {
+          setvalidate("")
       }
-      if(gid)
+      if(!Name.match("^[A-Za-z]+$") || !Gender.match("^[A-Za-z]+$"))
+      {
+        setvalidate("Name and gender should contain characters only")
+      }
+      if(MobileNumber.length<10)
+      {
+        setvalidate("Mobile Number should not be less than 10")
+      }
+      if(!MobileNumber.match("^[6-9]\d{9}$"))
+      {
+        setvalidate("Invalid Mobile number")
+      }
+      if(DebitCardNumber.length<16)
+      {
+        setvalidate("Debit Card Number should not be less than 16")
+      }
+      
+      
+      else
       {
         const formdata = {
-          id: gid,
+          id: shortid.generate(),
           Name:Name,
           MobileNumber:MobileNumber,
           DebitCardNumber:DebitCardNumber,
           Gender:Gender
         }
-        dispatch(updateContact(formdata))
+        if(gid)
+        {
+          const formdata = {
+            id: gid,
+            Name:Name,
+            MobileNumber:MobileNumber,
+            DebitCardNumber:DebitCardNumber,
+            Gender:Gender
+          }
+          dispatch(updateContact(formdata))
+        }
+        else{
+          dispatch(GetContact(""))
+          console.log("formdata" + JSON.stringify(formdata));
+          dispatch(AddContact(formdata));
+        }
       }
-      else{
-        dispatch(GetContact(""))
-        console.log("formdata" + JSON.stringify(formdata));
-        dispatch(AddContact(formdata));
-      }
-     
-     
+    
    }
    useEffect(() => {
     if (gid) {
@@ -81,7 +106,7 @@ function Form() {
         Mobile Number
       </label>
       <input
-        type="text"
+        type="number"
         id="Mobile Number"
         className="form-control"
         aria-describedby="passwordHelpInline"
@@ -121,8 +146,15 @@ function Form() {
 
     </div>
     <br></br>
-    <button className="btn btn-primary" type="submit"
-     onClick={submitHandler}>{gid ? "Update" : "Add"}</button>
+    <label style={{color:"red"}}>{validate}</label>
+    <br></br>
+    <br></br>
+    <button 
+    className="btn btn-primary" 
+    type="submit" 
+    disabled={!Name || !MobileNumber || !DebitCardNumber || !Gender}
+     onClick={submitHandler}
+     >{gid ? "Update" : "Add"}</button>
     </div>
     <div className="container">
       <div className="row d-flex flex-column">
