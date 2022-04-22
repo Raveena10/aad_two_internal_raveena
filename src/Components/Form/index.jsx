@@ -1,17 +1,22 @@
 import React, { useState,useEffect } from "react";
 import {  useHistory,useParams,Link } from "react-router-dom";
-import { AddContact } from "../../Redux/Action/FormAction";
+import { AddContact,DeleteContact,GetContact } from "../../Redux/Action/FormAction";
 import { useDispatch,useSelector} from "react-redux";
-import { DeleteContact } from '../../Redux/Action/FormAction';
 import shortid from "shortid";
 
 function Form() {
+  let { id } = useParams();
+  
   let history = useHistory();
   const dispatch = useDispatch()
     const [Name, setName] = useState("");
     const [MobileNumber, setMobileNumber] = useState("");
-    const [DebitCardNumber, setDebitCardNumber] = useState("");
+    const [DebitCardNumber, setDebitCardNumber] = useState(0);
     const [Gender, setGender] = useState("");
+    const [gid, setid] = useState("");
+    const dataselector = useSelector((state) => state.contacts.contacts)
+    const getdataselector = useSelector((state) => state.contacts.contact)
+    
     const submitHandler = (e) => {
       e.preventDefault()
  
@@ -24,10 +29,21 @@ function Form() {
      }
      console.log("formdata" + JSON.stringify(formdata));
      dispatch(AddContact(formdata));
-     setName("")
    }
-   
-  const dataselector = useSelector((state) => state.contacts.contacts)
+   useEffect(() => {
+    if (gid) {
+      dispatch(GetContact(gid));
+    }
+  }, [gid]);
+
+  useEffect(() => {
+    if (getdataselector != null) {
+      setName(getdataselector.Name)
+      setMobileNumber(getdataselector.MobileNumber)
+      setDebitCardNumber(getdataselector.DebitCardNumber)
+      setGender(getdataselector.Gender)
+    }
+  }, [getdataselector]);
   return (
     <>
     <div className="container">
@@ -41,6 +57,7 @@ function Form() {
         className="form-control"
         aria-describedby="passwordHelpInline"
         onChange={(e) => setName(e.target.value)}
+        value={Name}
       />
 
     </div>
@@ -54,6 +71,7 @@ function Form() {
         className="form-control"
         aria-describedby="passwordHelpInline"
         onChange={(e) => setMobileNumber(e.target.value)}
+        value={MobileNumber}
       />
 
     </div>
@@ -68,6 +86,7 @@ function Form() {
         className="form-control"
         aria-describedby="passwordHelpInline"
         onChange={(e) => setDebitCardNumber(e.target.value)}
+        value={DebitCardNumber}
       />
 
     </div>
@@ -82,6 +101,7 @@ function Form() {
         className="form-control"
         aria-describedby="passwordHelpInline"
         onChange={(e) => setGender(e.target.value)}
+        value={Gender}
       />
 
     </div>
@@ -124,9 +144,13 @@ function Form() {
                     >
                       Delete
                     </button>
-                    <Link>
-                      <span>edit</span>
-                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => setid(contacts.id)}
+                      className="btn btn-sm btn-danger mx-3"
+                    >
+                      Edit
+                    </button>
                   </td>
                 </tr>
               ))}

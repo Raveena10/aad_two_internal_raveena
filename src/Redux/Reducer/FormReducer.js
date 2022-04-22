@@ -2,10 +2,10 @@ const initialstate = {
   contacts: [
     {
       id:1,
-      Name: "sample",
-      MobileNumber: 0,
-      DebitCardNumber: "sample",
-      Gender:"sample"
+      Name: "raveena",
+      MobileNumber: 12345,
+      DebitCardNumber: 1234,
+      Gender:"female"
     }
   ]
 }
@@ -34,6 +34,25 @@ export const FormReducer = (state = initialstate, action) => {
         };
 
       }
+      case "GET_DATA":
+      {
+        console.log("getdata", action.payload);
+        let arr = state.contacts.filter(
+          (contact) => contact.id == action.payload
+        );
+
+        arr = arr.values();
+        
+        for (let val of arr) {
+          arr = val;
+        }
+        return {
+          ...state,
+          contact: arr,
+        };
+
+      }
+
         default:
       return state;
 
