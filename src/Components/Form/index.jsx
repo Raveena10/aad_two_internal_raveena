@@ -2,19 +2,16 @@ import React, { useState,useEffect } from "react";
 import {  useHistory,useParams,Link } from "react-router-dom";
 import { AddContact } from "../../Redux/Action/FormAction";
 import { useDispatch,useSelector} from "react-redux";
-
+import { DeleteContact } from '../../Redux/Action/FormAction';
 import shortid from "shortid";
 
 function Form() {
-    let history = useHistory();
-    
+  let history = useHistory();
   const dispatch = useDispatch()
     const [Name, setName] = useState("");
     const [MobileNumber, setMobileNumber] = useState("");
     const [DebitCardNumber, setDebitCardNumber] = useState("");
     const [Gender, setGender] = useState("");
-    const contactSelector = useSelector((state) => state.contacts.contacts)
-    console.log("contactSelector ", contactSelector)
     const submitHandler = (e) => {
       e.preventDefault()
  
@@ -27,8 +24,10 @@ function Form() {
      }
      console.log("formdata" + JSON.stringify(formdata));
      dispatch(AddContact(formdata));
+     setName("")
    }
-  
+   
+  const dataselector = useSelector((state) => state.contacts.contacts)
   return (
     <>
     <div className="container">
@@ -109,7 +108,7 @@ function Form() {
               </tr>
             </thead>
             <tbody>
-              {contactSelector.map(contacts => (
+              {dataselector.map(contacts => (
                 <tr>
                   <td>{contacts.id}</td>
                   <td>{contacts.Name}</td>
@@ -120,7 +119,7 @@ function Form() {
 
                     <button
                       type="button"
-                     
+                      onClick={() => dispatch(DeleteContact(contacts.id))}
                       className="btn btn-sm btn-danger mx-3"
                     >
                       Delete

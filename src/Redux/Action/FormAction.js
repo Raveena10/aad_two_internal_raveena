@@ -5,3 +5,11 @@ export const AddContact = (contactdata) => (
         payload: contactdata,
     }
 );
+export const DeleteContact = (deletedata) => (
+    console.log("DeleteContactAction", deletedata),
+    {
+        type: "DELETE_CONTACT",
+        payload: deletedata,
+    
+    }
+);

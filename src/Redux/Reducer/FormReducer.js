@@ -22,9 +22,22 @@ export const FormReducer = (state = initialstate, action) => {
           };
   
         }
+        case "DELETE_CONTACT":
+      {
+        console.log("deleteReducer", action)
+        console.log("deletestate", state)
+        return {
+          ...state,
+          contacts: state.contacts.filter(
+            (contact) => contact.id != action.payload
+          ),
+        };
+
+      }
         default:
       return state;
 
     }
+    
     
 }  
