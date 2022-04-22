@@ -1,6 +1,6 @@
 import React, { useState,useEffect } from "react";
 import {  useHistory,useParams,Link } from "react-router-dom";
-import { AddContact,DeleteContact,GetContact } from "../../Redux/Action/FormAction";
+import { AddContact,DeleteContact,GetContact, updateContact } from "../../Redux/Action/FormAction";
 import { useDispatch,useSelector} from "react-redux";
 import shortid from "shortid";
 
@@ -19,16 +19,31 @@ function Form() {
     
     const submitHandler = (e) => {
       e.preventDefault()
- 
-     const formdata = {
-       id: shortid.generate(),
-       Name:Name,
-       MobileNumber:MobileNumber,
-       DebitCardNumber:DebitCardNumber,
-       Gender:Gender
-     }
-     console.log("formdata" + JSON.stringify(formdata));
-     dispatch(AddContact(formdata));
+      const formdata = {
+        id: shortid.generate(),
+        Name:Name,
+        MobileNumber:MobileNumber,
+        DebitCardNumber:DebitCardNumber,
+        Gender:Gender
+      }
+      if(gid)
+      {
+        const formdata = {
+          id: gid,
+          Name:Name,
+          MobileNumber:MobileNumber,
+          DebitCardNumber:DebitCardNumber,
+          Gender:Gender
+        }
+        dispatch(updateContact(formdata))
+      }
+      else{
+        dispatch(GetContact(""))
+        console.log("formdata" + JSON.stringify(formdata));
+        dispatch(AddContact(formdata));
+      }
+     
+     
    }
    useEffect(() => {
     if (gid) {
@@ -105,12 +120,9 @@ function Form() {
       />
 
     </div>
-
-
-
     <br></br>
     <button className="btn btn-primary" type="submit"
-     onClick={submitHandler}>Add</button>
+     onClick={submitHandler}>{gid ? "Update" : "Add"}</button>
     </div>
     <div className="container">
       <div className="row d-flex flex-column">

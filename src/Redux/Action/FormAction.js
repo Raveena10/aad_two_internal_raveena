@@ -21,3 +21,10 @@ export const GetContact = (getdata) => (
     
     }
 );
+export const updateContact = (updatedata) => (
+    {
+        type: "UPDATE_DATA",
+        payload: updatedata,
+    
+    }
+);
