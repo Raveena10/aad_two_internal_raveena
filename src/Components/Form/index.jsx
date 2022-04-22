@@ -1,7 +1,7 @@
 import React, { useState,useEffect } from "react";
-import {  useHistory,useParams } from "react-router-dom";
+import {  useHistory,useParams,Link } from "react-router-dom";
 import { AddContact } from "../../Redux/Action/FormAction";
-import { useDispatch} from "react-redux";
+import { useDispatch,useSelector} from "react-redux";
 
 import shortid from "shortid";
 
@@ -13,7 +13,8 @@ function Form() {
     const [MobileNumber, setMobileNumber] = useState("");
     const [DebitCardNumber, setDebitCardNumber] = useState("");
     const [Gender, setGender] = useState("");
-
+    const contactSelector = useSelector((state) => state.contacts.contacts)
+    console.log("contactSelector ", contactSelector)
     const submitHandler = (e) => {
       e.preventDefault()
  
@@ -25,8 +26,7 @@ function Form() {
        Gender:Gender
      }
      console.log("formdata" + JSON.stringify(formdata));
-       dispatch(AddContact(formdata));
-      
+     dispatch(AddContact(formdata));
    }
   
   return (
@@ -91,10 +91,55 @@ function Form() {
 
     <br></br>
     <button className="btn btn-primary" type="submit"
-     onClick={submitHandler}>Add Contact</button>
+     onClick={submitHandler}>Add</button>
     </div>
+    <div className="container">
+      <div className="row d-flex flex-column">
+
+        <div className="col-md-14 mx-auto my-4">
+          <table className="table table-hover">
+            <thead className="table-header bg-dark text-white">
+              <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Name</th>
+                <th scope="col">MobileNumber</th>
+                <th scope="col">DebitCardNumber</th>
+                <th scope="col">Gender</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {contactSelector.map(contacts => (
+                <tr>
+                  <td>{contacts.id}</td>
+                  <td>{contacts.Name}</td>
+                  <td>{contacts.MobileNumber}</td>
+                  <td>{contacts.DebitCardNumber}</td>
+                  <td>{contacts.Gender}</td>
+                  <td>
+
+                    <button
+                      type="button"
+                     
+                      className="btn btn-sm btn-danger mx-3"
+                    >
+                      Delete
+                    </button>
+                    <Link>
+                      <span>edit</span>
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
   </>
   );
 }
+
 
 export default Form;

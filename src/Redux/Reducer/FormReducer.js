@@ -2,10 +2,10 @@ const initialstate = {
   contacts: [
     {
       id:1,
-      Name: "fgfdg",
-      MobileNumber: 6464564564,
-      DebitCardNumber: "4325354354325",
-      Gender:"female"
+      Name: "sample",
+      MobileNumber: 0,
+      DebitCardNumber: "sample",
+      Gender:"sample"
     }
   ]
 }
